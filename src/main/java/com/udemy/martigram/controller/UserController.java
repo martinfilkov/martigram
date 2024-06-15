@@ -1,6 +1,7 @@
 package com.udemy.martigram.controller;
 
 import com.udemy.martigram.entity.GramUser;
+import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,7 @@ public class UserController {
         Optional<GramUser> user = userService.findById(id);
 
         if(user.isPresent()) return user;
-        else throw new RuntimeException("Not Found!");
+        else throw new NotFoundException("User with id " + id + " not found");
     }
 
     @PostMapping("/users")
@@ -42,7 +43,7 @@ public class UserController {
     public void delete(@PathVariable long id){
         Optional<GramUser> user = userService.findById(id);
 
-        if(user.isEmpty()) throw new RuntimeException("Not Found!");
+        if(user.isEmpty()) throw new NotFoundException("User with id " + id + " not found");
 
         userService.delete(user.get());
     }
