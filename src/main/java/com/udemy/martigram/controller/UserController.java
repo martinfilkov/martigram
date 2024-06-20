@@ -2,6 +2,7 @@ package com.udemy.martigram.controller;
 
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.exception.NotFoundException;
+import com.udemy.martigram.model.UserModel;
 import com.udemy.martigram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
     private UserService userService;
 
@@ -20,31 +21,24 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/users")
-    public List<GramUser> view(){
+    @GetMapping
+    public List<UserModel> view(){
         return userService.findAll();
     }
 
-    @GetMapping("/users/{id}")
-    public Optional<GramUser> view(@PathVariable long id){
-        Optional<GramUser> user = userService.findById(id);
-
-        if(user.isPresent()) return user;
-        else throw new NotFoundException("User with id " + id + " not found");
+    @GetMapping("/{id}")
+    public UserModel view(@PathVariable long id){
+        return userService.findById(id);
     }
 
-    @PostMapping("/users")
-    public GramUser create(@RequestBody GramUser user){
-        return userService.save(user);
-    }
-
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable long id){
-        Optional<GramUser> user = userService.findById(id);
+        userService.delete(id);
+    }
 
-        if(user.isEmpty()) throw new NotFoundException("User with id " + id + " not found");
-
-        userService.delete(user.get());
+    @GetMapping("/profile")
+    public UserModel profile(){
+        return userService.profile();
     }
 }
