@@ -21,6 +21,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(AlreadyExistsException ex){
+        ErrorResponse error = new ErrorResponse();
+
+        error.setStatus(HttpStatus.CONFLICT.value());
+        error.setMessage(ex.getMessage());
+        error.setTimestamp(new Date(System.currentTimeMillis()));
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(Exception ex){
         ErrorResponse error = new ErrorResponse();
 

@@ -5,6 +5,7 @@ import com.udemy.martigram.dao.UserRepository;
 import com.udemy.martigram.entity.GramRole;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.entity.RoleType;
+import com.udemy.martigram.exception.AlreadyExistsException;
 import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.model.AuthenticationResponse;
 import com.udemy.martigram.model.LoginRequest;
@@ -28,7 +29,8 @@ public class AuthService {
         GramRole role = roleRepository.findByRole(RoleType.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Issue generating roles!"));
 
-        //Check if user exists
+        if(userRepository.findByUsername(request.getUsername()).isPresent())
+            throw new AlreadyExistsException("User " + request.getUsername() + " already exists");
 
         GramUser user = GramUser.builder()
                 .username(request.getUsername())
