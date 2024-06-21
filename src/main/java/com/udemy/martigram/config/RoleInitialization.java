@@ -18,11 +18,11 @@ public class RoleInitialization implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (roleRepository.findByRole(RoleType.ROLE_USER).isEmpty()) {
-            roleRepository.save(new GramRole(RoleType.ROLE_USER));
+        if (roleRepository.findByRole(RoleType.USER).isEmpty()) {
+            roleRepository.save(new GramRole(RoleType.USER));
         }
-        if (roleRepository.findByRole(RoleType.ROLE_ADMIN).isEmpty()) {
-            roleRepository.save(new GramRole(RoleType.ROLE_ADMIN));
+        if (roleRepository.findByRole(RoleType.ADMIN).isEmpty()) {
+            roleRepository.save(new GramRole(RoleType.ADMIN));
         }
     }
 }

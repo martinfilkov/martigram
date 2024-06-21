@@ -29,10 +29,10 @@ public class UserInitialization implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         if(userRepository.findAll().isEmpty()){
-           GramRole admin = roleRepository.findByRole(RoleType.ROLE_ADMIN)
+           GramRole admin = roleRepository.findByRole(RoleType.ADMIN)
                    .orElseThrow(() ->new RuntimeException("Issue generating roles!"));
 
-            GramRole user = roleRepository.findByRole(RoleType.ROLE_USER)
+            GramRole user = roleRepository.findByRole(RoleType.USER)
                     .orElseThrow(() ->new RuntimeException("Issue generating roles!"));
 
             GramUser lebron = GramUser.builder()

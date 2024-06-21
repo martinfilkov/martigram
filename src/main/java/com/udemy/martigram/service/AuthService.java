@@ -26,7 +26,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request){
-        GramRole role = roleRepository.findByRole(RoleType.ROLE_USER)
+        GramRole role = roleRepository.findByRole(RoleType.USER)
                 .orElseThrow(() -> new RuntimeException("Issue generating roles!"));
 
         if(userRepository.findByUsername(request.getUsername()).isPresent())
