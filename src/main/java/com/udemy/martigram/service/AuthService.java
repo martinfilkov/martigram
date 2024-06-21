@@ -32,6 +32,9 @@ public class AuthService {
         if(userRepository.findByUsername(request.getUsername()).isPresent())
             throw new AlreadyExistsException("User " + request.getUsername() + " already exists");
 
+        if(userRepository.findByEmail(request.getEmail()).isPresent())
+            throw new AlreadyExistsException("User with email " + request.getEmail() + " already exists");
+
         GramUser user = GramUser.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
