@@ -1,15 +1,12 @@
 package com.udemy.martigram.controller;
 
-import com.udemy.martigram.entity.GramUser;
-import com.udemy.martigram.exception.NotFoundException;
-import com.udemy.martigram.model.UserModel;
+import com.udemy.martigram.dto.UserDTO;
 import com.udemy.martigram.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -22,12 +19,12 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserModel> view(){
+    public List<UserDTO> view(){
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public UserModel view(@PathVariable long id){
+    public UserDTO view(@PathVariable long id){
         return userService.findById(id);
     }
 
@@ -38,7 +35,7 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public UserModel profile(){
+    public UserDTO profile(){
         return userService.profile();
     }
 }

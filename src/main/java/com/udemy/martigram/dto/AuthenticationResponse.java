@@ -1,4 +1,4 @@
-package com.udemy.martigram.model;
+package com.udemy.martigram.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserModel {
-    private Long id;
-    private String username;
-    private String email;
-    private Long role_id;
+public class AuthenticationResponse {
+    private String token;
 }
