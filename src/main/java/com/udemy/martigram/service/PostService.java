@@ -8,7 +8,7 @@ import com.udemy.martigram.entity.RoleType;
 import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.dto.PostDTO;
 import com.udemy.martigram.security.AuthenticatedUserProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -17,16 +17,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
-
-
-    @Autowired
-    public PostService(PostRepository postRepository, AuthenticatedUserProvider authenticatedUserProvider) {
-        this.postRepository = postRepository;
-        this.authenticatedUserProvider = authenticatedUserProvider;
-    }
 
     public List<PostDTO> findAll() {
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();

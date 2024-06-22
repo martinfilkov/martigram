@@ -4,9 +4,8 @@ import com.udemy.martigram.dao.UserRepository;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.dto.UserDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.udemy.martigram.security.AuthenticatedUserProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +13,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserService{
-    private UserRepository userRepository;
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
+    private final AuthenticatedUserProvider authenticatedUserProvider;
 
     public List<UserDTO> findAll() {
         List<GramUser> users = userRepository.findAll();
@@ -47,11 +43,8 @@ public class UserService{
     }
 
     public UserDTO profile() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        Optional<GramUser> findUser = userRepository.findByUsername(auth.getName());
-        if(findUser.isPresent()) return buildUser(findUser.get());
-        else throw new NotFoundException("User authentication not found");
+        GramUser user = authenticatedUserProvider.getAuthenticatedUser();
+        return buildUser(user);
     }
 
     private UserDTO buildUser(GramUser user){

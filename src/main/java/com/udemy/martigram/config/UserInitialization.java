@@ -5,6 +5,7 @@ import com.udemy.martigram.dao.UserRepository;
 import com.udemy.martigram.entity.GramRole;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.entity.RoleType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -14,17 +15,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @DependsOn("roleInitialization")
+@RequiredArgsConstructor
 public class UserInitialization implements CommandLineRunner {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserInitialization(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = new BCryptPasswordEncoder();
-    }
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
