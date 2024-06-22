@@ -6,11 +6,9 @@ import com.udemy.martigram.entity.GramRole;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.entity.RoleType;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
@@ -22,7 +20,7 @@ public class UserInitialization implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if(userRepository.findAll().isEmpty()){
            GramRole admin = roleRepository.findByRole(RoleType.ADMIN)
                    .orElseThrow(() ->new RuntimeException("Issue generating roles!"));
