@@ -1,5 +1,6 @@
 package com.udemy.martigram.service;
 
+import com.udemy.martigram.dao.FollowerRepository;
 import com.udemy.martigram.dao.UserRepository;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.exception.NotFoundException;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService{
     private final UserRepository userRepository;
+    private final FollowerRepository followerRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     public List<UserDTO> findAll() {
@@ -48,11 +50,16 @@ public class UserService{
     }
 
     private UserDTO buildUser(GramUser user){
+        int followerCount = followerRepository.countByFollowed(user);
+        int followingCount = followerRepository.countByFollower(user);
+
         return UserDTO.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .role_id(user.getRole().getId())
+                .followerCount(followerCount)
+                .followingCount(followingCount)
                 .build();
     }
 }
