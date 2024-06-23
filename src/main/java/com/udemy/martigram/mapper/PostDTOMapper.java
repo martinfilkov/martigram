@@ -1,22 +1,29 @@
 package com.udemy.martigram.mapper;
 
+import com.udemy.martigram.dao.CommentRepository;
 import com.udemy.martigram.dao.LikeRepository;
+import com.udemy.martigram.dto.CommentDTO;
 import com.udemy.martigram.dto.PostDTO;
 import com.udemy.martigram.entity.GramPost;
-import com.udemy.martigram.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class PostDTOMapper implements Function<GramPost, PostDTO> {
     private final LikeRepository likeRepository;
+    private final CommentRepository commentRepository;
+    private final CommentDTOMapper commentMapper;
 
     @Override
     public PostDTO apply(GramPost post) {
         int likes = likeRepository.countByPost(post);
+        List<CommentDTO> comments = commentRepository.findByPost(post).stream()
+                .map(commentMapper)
+                .toList();
 
         return PostDTO.builder()
                 .id(post.getId())
@@ -25,6 +32,7 @@ public class PostDTOMapper implements Function<GramPost, PostDTO> {
                 .date(post.getDate())
                 .likes(likes)
                 .author_id(post.getAuthor().getId())
+                .comments(comments)
                 .build();
     }
 }

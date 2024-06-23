@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,4 +19,5 @@ public class PostDTO {
     private Timestamp date;
     private Long author_id;
     private int likes;
+    private List<CommentDTO> comments;
 }
