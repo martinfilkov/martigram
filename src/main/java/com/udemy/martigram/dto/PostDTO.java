@@ -17,4 +17,5 @@ public class PostDTO {
     private String title;
     private Timestamp date;
     private Long author_id;
+    private int likes;
 }
