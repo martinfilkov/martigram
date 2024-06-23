@@ -1,10 +1,10 @@
 package com.udemy.martigram.service;
 
-import com.udemy.martigram.dao.FollowerRepository;
 import com.udemy.martigram.dao.UserRepository;
 import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.dto.UserDTO;
+import com.udemy.martigram.mapper.UserDTOMapper;
 import com.udemy.martigram.security.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService{
     private final UserRepository userRepository;
-    private final FollowerRepository followerRepository;
+    private final UserDTOMapper userMapper;
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
     public List<UserDTO> findAll() {
         List<GramUser> users = userRepository.findAll();
         return users.stream()
-                .map(this::buildUser)
+                .map(userMapper)
                 .collect(Collectors.toList());
     }
 
@@ -31,7 +31,7 @@ public class UserService{
         Optional<GramUser> findUser = userRepository.findById(id);
 
         if(findUser.isPresent()) {
-            return buildUser(findUser.get());
+            return userMapper.apply(findUser.get());
         }
         else throw new NotFoundException("User with id " + id + " not found");
     }
@@ -46,20 +46,6 @@ public class UserService{
 
     public UserDTO profile() {
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();
-        return buildUser(user);
-    }
-
-    private UserDTO buildUser(GramUser user){
-        int followerCount = followerRepository.countByFollowed(user);
-        int followingCount = followerRepository.countByFollower(user);
-
-        return UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role_id(user.getRole().getId())
-                .followerCount(followerCount)
-                .followingCount(followingCount)
-                .build();
+        return userMapper.apply(user);
     }
 }

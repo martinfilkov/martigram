@@ -7,6 +7,7 @@ import com.udemy.martigram.entity.GramUser;
 import com.udemy.martigram.entity.RoleType;
 import com.udemy.martigram.exception.NotFoundException;
 import com.udemy.martigram.dto.PostDTO;
+import com.udemy.martigram.mapper.PostDTOMapper;
 import com.udemy.martigram.security.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
+    private final PostDTOMapper postMapper;
 
     public List<PostDTO> findAll() {
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();
@@ -28,7 +30,7 @@ public class PostService {
                 ? postRepository.findAll()
                 : postRepository.findByAuthor(user);
         return posts.stream()
-                .map(this::buildPost)
+                .map(postMapper)
                 .collect(Collectors.toList());
     }
 
@@ -44,7 +46,7 @@ public class PostService {
         }
 
         GramPost post = postOptional.orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
-        return buildPost(post);
+        return postMapper.apply(post);
     }
 
 
@@ -60,7 +62,7 @@ public class PostService {
 
         postRepository.save(post);
 
-        return buildPost(post);
+        return postMapper.apply(post);
     }
 
     public void delete(long id){
@@ -75,15 +77,5 @@ public class PostService {
 
         GramPost post = postOptional.orElseThrow(() -> new NotFoundException("Post with id " + id + " not found"));
         postRepository.delete(post);
-    }
-
-    private PostDTO buildPost(GramPost post){
-        return PostDTO.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .date(post.getDate())
-                .author_id(post.getAuthor().getId())
-                .build();
     }
 }
