@@ -5,6 +5,7 @@ import com.udemy.martigram.dao.LikeRepository;
 import com.udemy.martigram.dto.CommentDTO;
 import com.udemy.martigram.dto.PostDTO;
 import com.udemy.martigram.entity.GramPost;
+import com.udemy.martigram.exception.InvalidActionException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ public class PostDTOMapper implements Function<GramPost, PostDTO> {
 
     @Override
     public PostDTO apply(GramPost post) {
+        if(post == null) throw new InvalidActionException("Post cannot be null");
         int likes = likeRepository.countByPost(post);
         List<CommentDTO> comments = commentRepository.findByPost(post).stream()
                 .map(commentMapper)
@@ -31,7 +33,7 @@ public class PostDTOMapper implements Function<GramPost, PostDTO> {
                 .content(post.getContent())
                 .date(post.getDate())
                 .likes(likes)
-                .author_id(post.getAuthor().getId())
+                .authorId(post.getAuthor().getId())
                 .comments(comments)
                 .build();
     }

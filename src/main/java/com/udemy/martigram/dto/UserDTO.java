@@ -15,7 +15,7 @@ public class UserDTO {
     private Long id;
     private String username;
     private String email;
-    private Long role_id;
+    private Long roleId;
     private int followerCount;
     private int followingCount;
     private List<PostDTO> posts;

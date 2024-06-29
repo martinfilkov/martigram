@@ -13,7 +13,6 @@ import com.udemy.martigram.mapper.CommentDTOMapper;
 import com.udemy.martigram.security.AuthenticatedUserProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,13 +43,13 @@ public class CommentService {
         return commentMapper.apply(comment.get());
     }
 
-    public CommentDTO save(@RequestBody CreateComment createComment){
+    public CommentDTO save(CreateComment createComment){
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();
 
         Optional<GramPost> post = postRepository.findById(createComment.getPostId());
 
         if(post.isEmpty())
-            throw new NotFoundException("Post with id " + createComment.getPostId() + " not found");
+            throw new NotFoundException("Comment with id " + createComment.getPostId() + " not found");
 
         GramComment comment = GramComment.builder()
                 .author(user)
@@ -69,7 +68,7 @@ public class CommentService {
                 ? commentRepository.findById(id)
                 : commentRepository.findByIdAndAuthor(id, user);
 
-        if(comment.isEmpty()) throw new NotFoundException("Post with id " + id + " not found");
+        if(comment.isEmpty()) throw new NotFoundException("Comment with id " + id + " not found");
 
         commentRepository.delete(comment.get());
     }

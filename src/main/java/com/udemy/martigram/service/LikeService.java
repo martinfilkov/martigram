@@ -20,13 +20,13 @@ public class LikeService {
     private final PostRepository postRepository;
     private final AuthenticatedUserProvider authenticatedUserProvider;
 
-    public void like(long post_id){
+    public void like(long postId){
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();
 
-        Optional<GramPost> post = postRepository.findById(post_id);
+        Optional<GramPost> post = postRepository.findById(postId);
 
         if(post.isEmpty())
-            throw new NotFoundException("Post with id " + post_id + " not found");
+            throw new NotFoundException("Post with id " + postId + " not found");
 
         if(likeRepository.findByUserAndPost(user, post.get()).isPresent())
             throw new UniqueConstraintException("Post already liked");
@@ -39,13 +39,13 @@ public class LikeService {
         likeRepository.save(like);
     }
 
-    public void removeLike(long post_id){
+    public void removeLike(long postId){
         GramUser user = authenticatedUserProvider.getAuthenticatedUser();
 
-        Optional<GramPost> post = postRepository.findById(post_id);
+        Optional<GramPost> post = postRepository.findById(postId);
 
         if(post.isEmpty())
-            throw new NotFoundException("Post with id " + post_id + " not found");
+            throw new NotFoundException("Post with id " + postId + " not found");
 
         Optional<GramLike> like = likeRepository.findByUserAndPost(user, post.get());
 
